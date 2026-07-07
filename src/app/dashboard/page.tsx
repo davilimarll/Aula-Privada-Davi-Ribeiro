@@ -35,6 +35,19 @@ function CheckCircleIcon({ className }: { className?: string }) {
   )
 }
 
+function TrophyIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+      <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+      <path d="M4 22h16" />
+      <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
+      <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
+      <path d="M18 2H6v7c0 3.31 2.69 6 6 6s6-2.69 6-6V2Z" />
+    </svg>
+  )
+}
+
 function ClockIcon({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -82,6 +95,7 @@ export default function DashboardPage() {
 
   const [entreguesCount, setEntreguesCount] = useState(0)
   const [redacoesCount, setRedacoesCount] = useState(0)
+  const isProfessor = user?.role === 'professor'
 
   const totalAtividades = 1 // Atualizar conforme adicionar atividades
   const pendentesCount = Math.max(0, totalAtividades - entreguesCount)
@@ -214,6 +228,37 @@ export default function DashboardPage() {
             </Link>
           ))}
         </div>
+
+        {/* Giro da Copa */}
+        {!isProfessor && (
+          <div className="mt-8 rounded-2xl bg-surface-800 border border-[#009b3a]/30 overflow-hidden shadow-lg shadow-[#009b3a]/10 relative group">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#009b3a] via-[#fedf00] to-[#002776]"></div>
+            <div className="p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2.5 rounded-xl bg-[#009b3a]/10 text-[#009b3a] group-hover:scale-110 transition-transform">
+                  <TrophyIcon className="w-6 h-6" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-text-primary">Giro da Copa 🏆</h2>
+                  <p className="text-sm text-text-muted">Acompanhe os jogos ao vivo enquanto estuda!</p>
+                </div>
+              </div>
+              <div className="rounded-xl overflow-hidden border border-surface-700 bg-surface-900 relative">
+                {/* ScoreBat Iframe */}
+                <iframe 
+                  src="https://www.scorebat.com/embed/livescore/" 
+                  frameBorder="0" 
+                  width="100%" 
+                  height="600" 
+                  allowFullScreen 
+                  allow="autoplay; fullscreen" 
+                  style={{width: '100%', height: '600px', overflow: 'hidden', display: 'block'}} 
+                  className="_scorebatEmbeddedPlayer_"
+                ></iframe>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Tip Card */}
