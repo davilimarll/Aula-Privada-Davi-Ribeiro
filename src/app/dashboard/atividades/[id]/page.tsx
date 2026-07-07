@@ -33,6 +33,44 @@ function CheckIcon({ className }: { className?: string }) {
   )
 }
 
+function CalendarIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
+      <line x1="16" x2="16" y1="2" y2="6"/>
+      <line x1="8" x2="8" y1="2" y2="6"/>
+      <line x1="3" x2="21" y1="10" y2="10"/>
+    </svg>
+  )
+}
+
+function CheckCircleIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+      <polyline points="22 4 12 14.01 9 11.01" />
+    </svg>
+  )
+}
+
+function StarIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+    </svg>
+  )
+}
+
+function LightbulbIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.9 1.3 1.5 1.5 2.5"/>
+      <path d="M9 18h6"/>
+      <path d="M10 22h4"/>
+    </svg>
+  )
+}
+
 interface RespostaAluno {
   id: string
   username: string
@@ -222,10 +260,10 @@ export default function AtividadeRespostaPage() {
           <span className="text-xs px-2.5 py-1 rounded-full bg-brand-500/10 text-brand-300 border border-brand-500/15">
             {atividade.materia}
           </span>
-          <span className="text-xs text-text-muted">📅 Entrega: {atividade.dataEntrega}</span>
+          <span className="text-xs text-text-muted flex items-center gap-1"><CalendarIcon className="w-3.5 h-3.5" /> Entrega: {atividade.dataEntrega}</span>
           {!isProfessor && respostaSalva && (
-            <span className="text-xs px-2.5 py-1 rounded-full bg-success/10 text-success border border-success/20">
-              ✅ Respondida
+            <span className="text-xs px-2.5 py-1 rounded-full bg-success/10 text-success border border-success/20 flex items-center gap-1">
+              <CheckCircleIcon className="w-3.5 h-3.5" /> Respondida
             </span>
           )}
         </div>
@@ -270,8 +308,8 @@ export default function AtividadeRespostaPage() {
                       <p className="text-xs text-text-muted">Enviado em {new Date(resp.created_at).toLocaleString('pt-BR')}</p>
                     </div>
                     {resp.nota && (
-                      <span className="inline-flex items-center px-3 py-1 rounded-full bg-success/10 text-success font-bold">
-                        ⭐ Nota: {resp.nota}
+                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-success/10 text-success font-bold">
+                        <StarIcon className="w-4 h-4 text-success" /> Nota: {resp.nota}
                       </span>
                     )}
                   </div>
@@ -362,7 +400,7 @@ export default function AtividadeRespostaPage() {
                   )}
                 </p>
                 {respostaSalva && !respostaSalva.nota && (
-                  <p className="text-xs text-success">✅ Resposta enviada ao professor</p>
+                  <p className="text-xs text-success flex items-center gap-1"><CheckCircleIcon className="w-3.5 h-3.5" /> Resposta enviada ao professor</p>
                 )}
               </div>
             </div>
@@ -374,8 +412,8 @@ export default function AtividadeRespostaPage() {
                   Atividade Corrigida!
                 </h3>
                 <div className="flex flex-col gap-2">
-                  <div className="inline-flex max-w-fit items-center px-3 py-1 rounded-full bg-success/20 text-success font-bold">
-                    ⭐ Nota: {respostaSalva.nota}
+                  <div className="inline-flex max-w-fit items-center gap-1 px-3 py-1 rounded-full bg-success/20 text-success font-bold">
+                    <StarIcon className="w-4 h-4 text-success" /> Nota: {respostaSalva.nota}
                   </div>
                   {respostaSalva.feedback && (
                     <p className="text-sm text-text-secondary mt-2 border-l-2 border-success/30 pl-3">
@@ -419,11 +457,12 @@ export default function AtividadeRespostaPage() {
       {/* Tip */}
       {!isProfessor && !respostaSalva && (
         <div
-          className="glass-card p-4 border-l-4 border-l-brand-500 opacity-0 animate-fade-in-up"
+          className="glass-card p-4 border-l-4 border-l-brand-500 opacity-0 animate-fade-in-up flex items-start gap-3"
           style={{ animationDelay: '0.5s', animationFillMode: 'forwards' }}
         >
+          <LightbulbIcon className="w-5 h-5 text-brand-400 mt-0.5 shrink-0" />
           <p className="text-sm text-text-secondary">
-            💡 <strong className="text-brand-300">Dica:</strong>{' '}
+            <strong className="text-brand-300">Dica:</strong>{' '}
             {user.displayName}, releia a questão com calma antes de responder. Uma boa resposta é clara, objetiva e demonstra compreensão do texto.
           </p>
         </div>

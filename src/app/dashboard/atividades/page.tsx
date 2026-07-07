@@ -41,7 +41,59 @@ function CheckCircleIcon({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-      <path d="m9 11 3 3L22 4" />
+      <polyline points="22 4 12 14.01 9 11.01" />
+    </svg>
+  )
+}
+
+function ListTodoIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="5" width="6" height="6" rx="1"/>
+      <path d="m3 17 2 2 4-4"/>
+      <path d="M13 6h8"/>
+      <path d="M13 12h8"/>
+      <path d="M13 18h8"/>
+    </svg>
+  )
+}
+
+function GraduationCapIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+      <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+    </svg>
+  )
+}
+
+function CalendarIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
+      <line x1="16" x2="16" y1="2" y2="6"/>
+      <line x1="8" x2="8" y1="2" y2="6"/>
+      <line x1="3" x2="21" y1="10" y2="10"/>
+    </svg>
+  )
+}
+
+function HourglassIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M5 22h14"/>
+      <path d="M5 2h14"/>
+      <path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/>
+      <path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/>
+    </svg>
+  )
+}
+
+function PinIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="12" x2="12" y1="17" y2="22"/>
+      <path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.68V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3v4.68a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/>
     </svg>
   )
 }
@@ -110,10 +162,10 @@ export default function AtividadesPage() {
       {/* Page Header */}
       <div className="animate-fade-in-up">
         <h1 className="text-2xl font-bold text-text-primary">Atividades</h1>
-        <p className="mt-1 text-text-secondary">
+        <p className="mt-1 text-text-secondary flex items-center gap-2">
           {isProfessor 
-            ? `${user.displayName}, aqui estão as atividades da sua turma. Acompanhe as respostas dos alunos! 👨‍🏫`
-            : `${user.displayName}, aqui estão suas atividades. Clique em "Fazer Atividade" para responder! 📋`
+            ? <><GraduationCapIcon className="w-5 h-5 text-brand-400" /> {user.displayName}, aqui estão as atividades da sua turma. Acompanhe as respostas dos alunos!</>
+            : <><ListTodoIcon className="w-5 h-5 text-brand-400" /> {user.displayName}, aqui estão suas atividades. Clique em "Fazer Atividade" para responder!</>
           }
         </p>
       </div>
@@ -191,7 +243,7 @@ export default function AtividadesPage() {
                       {atividade.descricao}
                     </p>
                     <div className="flex flex-wrap items-center gap-4 text-xs text-text-muted">
-                      <span>📅 Entrega: {atividade.dataEntrega}</span>
+                      <span className="flex items-center gap-1"><CalendarIcon className="w-3.5 h-3.5" /> Entrega: {atividade.dataEntrega}</span>
                       {!isProfessor && (
                         <span
                           className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full ${
@@ -200,7 +252,7 @@ export default function AtividadesPage() {
                               : 'bg-warning/10 text-warning'
                           }`}
                         >
-                          {respondida ? '✅ Entregue' : '⏳ Pendente'}
+                          {respondida ? <><CheckCircleIcon className="w-3.5 h-3.5" /> Entregue</> : <><HourglassIcon className="w-3.5 h-3.5" /> Pendente</>}
                         </span>
                       )}
                     </div>
@@ -242,14 +294,15 @@ export default function AtividadesPage() {
 
       {/* Help Tip */}
       <div
-        className="glass-card p-4 border-l-4 border-l-brand-500 opacity-0 animate-fade-in-up"
+        className="glass-card p-4 border-l-4 border-l-brand-500 opacity-0 animate-fade-in-up flex items-start gap-3"
         style={{ animationDelay: '0.6s', animationFillMode: 'forwards' }}
       >
+        <PinIcon className="w-5 h-5 text-brand-400 mt-0.5 shrink-0" />
         <p className="text-sm text-text-secondary">
           {isProfessor ? (
-            <>📌 <strong className="text-brand-300">Prof. {user.displayName}</strong>, clique em &quot;Ver Respostas dos Alunos&quot; para corrigir as atividades enviadas.</>
+            <><strong className="text-brand-300">Prof. {user.displayName}</strong>, clique em &quot;Ver Respostas dos Alunos&quot; para corrigir as atividades enviadas.</>
           ) : (
-            <>📌 <strong className="text-brand-300">{user.displayName}</strong>, clique em &quot;Fazer Atividade&quot; para abrir a questão e enviar sua resposta. Depois de enviar, você pode revisá-la clicando em &quot;Ver Resposta&quot;.</>
+            <><strong className="text-brand-300">{user.displayName}</strong>, clique em &quot;Fazer Atividade&quot; para abrir a questão e enviar sua resposta. Depois de enviar, você pode revisá-la clicando em &quot;Ver Resposta&quot;.</>
           )}
         </p>
       </div>

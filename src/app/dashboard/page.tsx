@@ -44,6 +44,28 @@ function ClockIcon({ className }: { className?: string }) {
   )
 }
 
+function SparklesIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+      <path d="M5 3v4"/>
+      <path d="M19 17v4"/>
+      <path d="M3 5h4"/>
+      <path d="M17 19h4"/>
+    </svg>
+  )
+}
+
+function LightbulbIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.9 1.3 1.5 1.5 2.5"/>
+      <path d="M9 18h6"/>
+      <path d="M10 22h4"/>
+    </svg>
+  )
+}
+
 function ArrowRightIcon({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -134,13 +156,13 @@ export default function DashboardPage() {
       {/* Welcome Banner */}
       <div className="glass-card p-6 lg:p-8 relative overflow-hidden animate-fade-in-up">
         <div className="absolute top-0 right-0 w-64 h-64 bg-brand-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
-        <div className="relative">
-          <h1 className="text-2xl lg:text-3xl font-bold text-text-primary">
-            Ei, {user.displayName}, seja bem-vindo de volta! 🎉
-          </h1>
-          <p className="mt-2 text-text-secondary leading-relaxed max-w-xl">
-            Que bom ter você aqui. Confira suas atividades pendentes e continue seu aprendizado.
-            Estamos juntos nessa jornada!
+        <div className="relative z-10 p-8 flex flex-col items-center text-center justify-center min-h-[160px]">
+          <h2 className="text-xl md:text-2xl font-bold text-text-primary mb-2 flex items-center justify-center gap-2">
+            Ei, {user.displayName}, seja bem-vindo de volta! 
+            <SparklesIcon className="w-6 h-6 text-gold-400 animate-pulse" />
+          </h2>
+          <p className="text-text-secondary text-sm md:text-base max-w-lg mx-auto">
+            Preparado para mais um dia de estudos? Confira suas atividades pendentes e continue sua jornada.
           </p>
         </div>
       </div>
@@ -192,12 +214,13 @@ export default function DashboardPage() {
 
       {/* Tip Card */}
       <div
-        className="glass-card p-5 border-l-4 border-l-gold-500 opacity-0 animate-fade-in-up"
-        style={{ animationDelay: '0.7s', animationFillMode: 'forwards' }}
+        className="glass-card p-4 border-l-4 border-l-gold-500 opacity-0 animate-fade-in-up flex items-start gap-3"
+        style={{ animationDelay: '0.6s', animationFillMode: 'forwards' }}
       >
+        <LightbulbIcon className="w-5 h-5 text-gold-500 mt-0.5 shrink-0" />
         <p className="text-sm text-text-secondary">
-          💡 <strong className="text-gold-400">Dica do Professor:</strong>{' '}
-          {user.displayName}, lembre-se de entregar suas atividades dentro do prazo. A organização é a chave para um bom desempenho!
+          <strong className="text-gold-400">Dica do Professor:</strong>{' '}
+          Para melhorar seu desempenho, tente revisar o conteúdo da aula logo após as atividades. A constância é a chave do sucesso.
         </p>
       </div>
     </div>

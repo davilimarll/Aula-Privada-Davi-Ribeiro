@@ -22,6 +22,46 @@ function SendIcon({ className }: { className?: string }) {
   )
 }
 
+function PenToolIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 19l7-7 3 3-7 7-3-3z"/>
+      <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/>
+      <path d="M2 2l7.586 7.586"/>
+      <circle cx="11" cy="11" r="2"/>
+    </svg>
+  )
+}
+
+function CalendarIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
+      <line x1="16" x2="16" y1="2" y2="6"/>
+      <line x1="8" x2="8" y1="2" y2="6"/>
+      <line x1="3" x2="21" y1="10" y2="10"/>
+    </svg>
+  )
+}
+
+function StarIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+    </svg>
+  )
+}
+
+function LightbulbIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.9 1.3 1.5 1.5 2.5"/>
+      <path d="M9 18h6"/>
+      <path d="M10 22h4"/>
+    </svg>
+  )
+}
+
 function CheckIcon({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -128,8 +168,9 @@ export default function RedacoesPage() {
       {/* Page Header */}
       <div className="animate-fade-in-up">
         <h1 className="text-2xl font-bold text-text-primary">Redações</h1>
-        <p className="mt-1 text-text-secondary">
-          {user.displayName}, aqui você pode enviar suas redações e acompanhar as correções. ✍️
+        <p className="mt-1 text-text-secondary flex items-center gap-2">
+          <PenToolIcon className="w-5 h-5 text-brand-400" />
+          {user.displayName}, aqui você pode enviar suas redações e acompanhar as correções.
         </p>
       </div>
 
@@ -285,10 +326,10 @@ export default function RedacoesPage() {
                         {redacao.conteudo}
                       </p>
                       <div className="flex flex-wrap items-center gap-4 text-xs text-text-muted">
-                        <span>📅 Enviada em: {formatarData(redacao.created_at)}</span>
+                        <span className="flex items-center gap-1"><CalendarIcon className="w-3.5 h-3.5" /> Enviada em: {formatarData(redacao.created_at)}</span>
                         {redacao.nota && (
                           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-success/10 text-success font-medium">
-                            ⭐ Nota: {redacao.nota}
+                            <span className="flex items-center gap-1"><StarIcon className="w-4 h-4 text-success" /> Nota: {redacao.nota}</span>
                           </span>
                         )}
                       </div>
@@ -303,11 +344,12 @@ export default function RedacoesPage() {
 
       {/* Help Tip */}
       <div
-        className="glass-card p-4 border-l-4 border-l-gold-500 opacity-0 animate-fade-in-up"
+        className="glass-card p-4 border-l-4 border-l-gold-500 opacity-0 animate-fade-in-up flex items-start gap-3 mt-8"
         style={{ animationDelay: '0.7s', animationFillMode: 'forwards' }}
       >
+        <LightbulbIcon className="w-5 h-5 text-gold-500 mt-0.5 shrink-0" />
         <p className="text-sm text-text-secondary">
-          💡 <strong className="text-gold-400">Dica:</strong>{' '}
+          <strong className="text-gold-400">Dica:</strong>{' '}
           {user.displayName}, leia seu texto em voz alta antes de enviar. Isso ajuda a identificar erros e melhorar a fluidez da escrita!
         </p>
       </div>

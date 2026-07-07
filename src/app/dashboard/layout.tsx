@@ -72,6 +72,17 @@ function CloseIcon({ className }: { className?: string }) {
   )
 }
 
+function WavingHandIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M18 11V6a2 2 0 0 0-4 0v4"/>
+      <path d="M14 10V4a2 2 0 0 0-4 0v6"/>
+      <path d="M10 10.5V3a2 2 0 0 0-4 0v9"/>
+      <path d="m7 15-1.76-1.76a2 2 0 0 0-2.83 2.82l3.6 3.6C7.5 21.14 9.2 22 12 22h2a8 8 0 0 0 8-8V7a2 2 0 1 0-4 0v5"/>
+    </svg>
+  )
+}
+
 const navItems = [
   { href: '/dashboard', label: 'Início', icon: HomeIcon },
   { href: '/dashboard/atividades', label: 'Atividades', icon: ClipboardIcon },
@@ -208,8 +219,11 @@ export default function DashboardLayout({
               >
                 <MenuIcon className="w-6 h-6" />
               </button>
-              <h2 className="text-lg font-semibold text-text-primary">
-                Olá, <span className="gradient-text">{user.displayName}</span>! 👋
+              <h2 className="text-lg font-semibold text-text-primary flex items-center gap-2">
+                Olá, <span className="gradient-text">{user.displayName}</span>! 
+                <span className="animate-wave origin-bottom-right inline-block">
+                  <WavingHandIcon className="w-5 h-5 text-gold-400" />
+                </span>
               </h2>
             </div>
             <div className="hidden lg:flex items-center gap-2 text-sm text-text-muted">
