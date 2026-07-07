@@ -15,14 +15,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>('dark')
 
   useEffect(() => {
-    // Tenta carregar o tema salvo ou usa a preferência do sistema
+    // Tenta carregar o tema salvo ou usa escuro (dark) como padrão
     const savedTheme = localStorage.getItem('aula-privada-theme') as Theme | null
     if (savedTheme) {
       setTheme(savedTheme)
       document.documentElement.setAttribute('data-theme', savedTheme)
     } else {
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-      const defaultTheme = prefersDark ? 'dark' : 'light'
+      const defaultTheme = 'dark'
       setTheme(defaultTheme)
       document.documentElement.setAttribute('data-theme', defaultTheme)
     }

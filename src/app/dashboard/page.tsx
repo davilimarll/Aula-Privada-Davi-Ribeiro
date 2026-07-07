@@ -115,6 +115,7 @@ export default function DashboardPage() {
       color: 'text-warning',
       bgColor: 'bg-warning/10',
       borderColor: 'border-warning/20',
+      href: '/dashboard/atividades',
     },
     {
       label: 'Atividades Entregues',
@@ -123,6 +124,7 @@ export default function DashboardPage() {
       color: 'text-success',
       bgColor: 'bg-success/10',
       borderColor: 'border-success/20',
+      href: '/dashboard/atividades',
     },
     {
       label: 'Redações Enviadas',
@@ -131,6 +133,7 @@ export default function DashboardPage() {
       color: 'text-brand-400',
       bgColor: 'bg-brand-400/10',
       borderColor: 'border-brand-400/20',
+      href: '/dashboard/redacoes',
     },
   ]
 
@@ -170,19 +173,20 @@ export default function DashboardPage() {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {stats.map((stat, index) => (
-          <div
+          <Link
             key={stat.label}
-            className={`glass-card p-5 opacity-0 animate-fade-in-up`}
+            href={stat.href}
+            className={`glass-card p-5 opacity-0 animate-fade-in-up hover:-translate-y-1 transition-transform group`}
             style={{ animationDelay: `${index * 0.1 + 0.2}s`, animationFillMode: 'forwards' }}
           >
             <div className="flex items-center justify-between mb-3">
-              <div className={`w-11 h-11 rounded-xl ${stat.bgColor} flex items-center justify-center ${stat.color}`}>
+              <div className={`w-11 h-11 rounded-xl ${stat.bgColor} flex items-center justify-center ${stat.color} group-hover:scale-110 transition-transform`}>
                 {stat.icon}
               </div>
               <span className={`text-2xl font-bold ${stat.color}`}>{stat.value}</span>
             </div>
-            <p className="text-sm text-text-secondary">{stat.label}</p>
-          </div>
+            <p className="text-sm text-text-secondary group-hover:text-text-primary transition-colors">{stat.label}</p>
+          </Link>
         ))}
       </div>
 
