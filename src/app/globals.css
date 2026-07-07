@@ -1,0 +1,236 @@
+@import "tailwindcss";
+
+/* ===========================
+   Design System — Prof. Davi Ribeiro
+   =========================== */
+
+@theme {
+  /* Cores da marca */
+  --color-brand-50: #eff6ff;
+  --color-brand-100: #dbeafe;
+  --color-brand-200: #bfdbfe;
+  --color-brand-300: #93c5fd;
+  --color-brand-400: #60a5fa;
+  --color-brand-500: #3b82f6;
+  --color-brand-600: #2563eb;
+  --color-brand-700: #1d4ed8;
+
+  --color-gold-400: #fbbf24;
+  --color-gold-500: #f59e0b;
+  --color-gold-600: #d97706;
+
+  /* Superfícies */
+  --color-surface-900: #06060b;
+  --color-surface-800: #0a0a12;
+  --color-surface-700: #10101c;
+  --color-surface-600: #161625;
+  --color-surface-500: #1e1e30;
+  --color-surface-400: #2a2a42;
+
+  /* Texto */
+  --color-text-primary: #f1f5f9;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+
+  /* Status */
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+}
+
+/* ===========================
+   Base Styles
+   =========================== */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-surface-900);
+  color: var(--color-text-primary);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===========================
+   Utility Classes
+   =========================== */
+
+/* Glass Card */
+.glass-card {
+  background: linear-gradient(
+    135deg,
+    rgba(30, 30, 48, 0.8) 0%,
+    rgba(16, 16, 28, 0.9) 100%
+  );
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(59, 130, 246, 0.1);
+  border-radius: 1rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(59, 130, 246, 0.25);
+  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.08);
+  transform: translateY(-2px);
+}
+
+/* Gradient Text */
+.gradient-text {
+  background: linear-gradient(135deg, var(--color-brand-400), var(--color-gold-400));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glowing Button */
+.btn-glow {
+  position: relative;
+  background: linear-gradient(135deg, var(--color-brand-600), var(--color-brand-500));
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.btn-glow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--color-brand-500), var(--color-brand-400));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.btn-glow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px rgba(59, 130, 246, 0.4);
+}
+
+.btn-glow:hover::before {
+  opacity: 1;
+}
+
+.btn-glow:active {
+  transform: translateY(0);
+}
+
+.btn-glow span {
+  position: relative;
+  z-index: 1;
+}
+
+/* Animated Gradient Border */
+.gradient-border {
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: 1rem;
+  background: linear-gradient(135deg, var(--color-brand-500), var(--color-gold-500), var(--color-brand-500));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: borderRotate 4s linear infinite;
+}
+
+@keyframes borderRotate {
+  0% {
+    background: linear-gradient(0deg, var(--color-brand-500), var(--color-gold-500), var(--color-brand-500));
+  }
+  25% {
+    background: linear-gradient(90deg, var(--color-brand-500), var(--color-gold-500), var(--color-brand-500));
+  }
+  50% {
+    background: linear-gradient(180deg, var(--color-brand-500), var(--color-gold-500), var(--color-brand-500));
+  }
+  75% {
+    background: linear-gradient(270deg, var(--color-brand-500), var(--color-gold-500), var(--color-brand-500));
+  }
+  100% {
+    background: linear-gradient(360deg, var(--color-brand-500), var(--color-gold-500), var(--color-brand-500));
+  }
+}
+
+/* Floating Animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Pulse Glow */
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 5px rgba(59, 130, 246, 0.2); }
+  50% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+/* Fade In Up */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.animation-delay-100 { animation-delay: 0.1s; }
+.animation-delay-200 { animation-delay: 0.2s; }
+.animation-delay-300 { animation-delay: 0.3s; }
+.animation-delay-400 { animation-delay: 0.4s; }
+.animation-delay-500 { animation-delay: 0.5s; }
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-surface-800);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-surface-400);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand-500);
+}
+
+/* Input Focus */
+.input-focus {
+  transition: all 0.3s ease;
+  border: 1px solid rgba(59, 130, 246, 0.15);
+  background: var(--color-surface-700);
+}
+
+.input-focus:focus {
+  outline: none;
+  border-color: var(--color-brand-500);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
