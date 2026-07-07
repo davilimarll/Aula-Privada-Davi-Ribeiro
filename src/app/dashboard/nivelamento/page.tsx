@@ -42,62 +42,132 @@ const questoes = [
   },
   {
     id: 2,
+    tema: 'Números Racionais',
+    pergunta: 'Joana comeu 1/4 de uma pizza e seu irmão comeu 3/8. Qual fração da pizza sobrou?',
+    opcoes: ['1/8', '3/8', '5/8', '1/2'],
+    respostaCerta: 1
+  },
+  {
+    id: 3,
     tema: 'Mínimo Múltiplo Comum',
     pergunta: 'Dois ônibus partem juntos do terminal. A linha A passa a cada 15 minutos e a linha B a cada 25 minutos. Daqui a quantos minutos eles partirão juntos novamente?',
     opcoes: ['50 min', '75 min', '100 min', '125 min'],
     respostaCerta: 1
   },
   {
-    id: 3,
-    tema: 'Porcentagem',
-    pergunta: 'Um tênis que custava R$ 250,00 entrou em promoção com 20% de desconto. Qual é o preço do tênis com o desconto?',
-    opcoes: ['R$ 230,00', 'R$ 210,00', 'R$ 200,00', 'R$ 180,00'],
-    respostaCerta: 2
-  },
-  {
     id: 4,
-    tema: 'Regra de Três Simples',
-    pergunta: 'Se 4 pedreiros constroem um muro em 6 dias, em quantos dias 3 pedreiros construiriam o mesmo muro (trabalhando no mesmo ritmo)?',
-    opcoes: ['4,5 dias', '6 dias', '8 dias', '10 dias'],
+    tema: 'Mínimo Múltiplo Comum',
+    pergunta: 'Um farol pisca a cada 8 segundos e outro a cada 12 segundos. Se ambos piscarem juntos agora, daqui a quantos segundos piscarão juntos novamente?',
+    opcoes: ['16', '20', '24', '48'],
     respostaCerta: 2
   },
   {
     id: 5,
+    tema: 'Razão e Proporção',
+    pergunta: 'Uma maquete de um prédio foi feita na escala 1:50. Se a maquete tem 60 cm de altura, qual a altura real do prédio?',
+    opcoes: ['3 metros', '15 metros', '30 metros', '60 metros'],
+    respostaCerta: 2
+  },
+  {
+    id: 6,
+    tema: 'Razão e Proporção',
+    pergunta: 'Se 2 kg de carne custam R$ 70, quanto custarão 5 kg da mesma carne?',
+    opcoes: ['R$ 140', 'R$ 175', 'R$ 210', 'R$ 350'],
+    respostaCerta: 1
+  },
+  {
+    id: 7,
+    tema: 'Porcentagem',
+    pergunta: 'Um tênis que custava R$ 250,00 entrou em promoção com 20% de desconto. Qual é o preço final?',
+    opcoes: ['R$ 230,00', 'R$ 210,00', 'R$ 200,00', 'R$ 180,00'],
+    respostaCerta: 2
+  },
+  {
+    id: 8,
+    tema: 'Porcentagem',
+    pergunta: 'Uma conta de R$ 120 teve um atraso e sofreu um acréscimo de 5%. Qual foi o valor pago?',
+    opcoes: ['R$ 125', 'R$ 126', 'R$ 130', 'R$ 180'],
+    respostaCerta: 1
+  },
+  {
+    id: 9,
+    tema: 'Regra de Três Simples',
+    pergunta: 'Se 4 pedreiros constroem um muro em 6 dias, em quantos dias 3 pedreiros construiriam o mesmo muro (no mesmo ritmo)?',
+    opcoes: ['4,5 dias', '6 dias', '8 dias', '10 dias'],
+    respostaCerta: 2
+  },
+  {
+    id: 10,
+    tema: 'Regra de Três Simples',
+    pergunta: 'Uma torneira enche um tanque em 4 horas. Se adicionarmos outra torneira com a mesma vazão, em quanto tempo o tanque ficará cheio?',
+    opcoes: ['1 hora', '2 horas', '6 horas', '8 horas'],
+    respostaCerta: 1
+  },
+  {
+    id: 11,
     tema: 'Média Aritmética',
-    pergunta: 'As notas de um aluno durante os bimestres foram: 6.5, 7.0, 8.5 e 6.0. Qual foi a média anual?',
+    pergunta: 'As notas de um aluno foram: 6.5, 7.0, 8.5 e 6.0. Qual foi a média?',
     opcoes: ['6.5', '7.0', '7.5', '8.0'],
     respostaCerta: 1
   },
   {
-    id: 6,
+    id: 12,
+    tema: 'Média Aritmética',
+    pergunta: 'O peso médio de 4 pessoas é 70 kg. Se uma quinta pessoa de 80 kg se juntar, qual será a nova média de peso?',
+    opcoes: ['71 kg', '72 kg', '74 kg', '75 kg'],
+    respostaCerta: 1
+  },
+  {
+    id: 13,
     tema: 'Equação do 1º Grau',
     pergunta: 'O triplo de um número subtraído de 5 resulta em 16. Que número é esse?',
     opcoes: ['7', '6', '8', '9'],
     respostaCerta: 0
   },
   {
-    id: 7,
+    id: 14,
+    tema: 'Equação do 1º Grau',
+    pergunta: 'A soma de três números inteiros consecutivos é 48. Qual é o maior desses números?',
+    opcoes: ['15', '16', '17', '18'],
+    respostaCerta: 2
+  },
+  {
+    id: 15,
     tema: 'Sistema de Equações',
-    pergunta: 'Em um estacionamento há carros e motos, totalizando 12 veículos e 38 rodas. Quantos carros e quantas motos há no estacionamento?',
+    pergunta: 'Em um estacionamento há carros e motos, totalizando 12 veículos e 38 rodas. Quantos carros e quantas motos há?',
     opcoes: ['5 carros e 7 motos', '6 carros e 6 motos', '7 carros e 5 motos', '8 carros e 4 motos'],
     respostaCerta: 2
   },
   {
-    id: 8,
+    id: 16,
+    tema: 'Sistema de Equações',
+    pergunta: 'João e Maria têm juntos R$ 150. João tem R$ 30 a mais que Maria. Quanto Maria tem?',
+    opcoes: ['R$ 50', 'R$ 60', 'R$ 80', 'R$ 90'],
+    respostaCerta: 1
+  },
+  {
+    id: 17,
     tema: 'Sistema Métrico',
-    pergunta: 'Quantos litros de água cabem em uma caixa d\'água em formato de cubo com 1 metro de aresta? (Lembrando que 1 m³ = 1000 L)',
+    pergunta: 'Quantos litros de água cabem em uma caixa d\'água em formato de cubo com 1 metro de aresta?',
     opcoes: ['100 L', '1000 L', '10 L', '10.000 L'],
     respostaCerta: 1
   },
   {
-    id: 9,
-    tema: 'Geometria (Pitágoras)',
-    pergunta: 'Uma escada de 5 metros está apoiada em um muro. A base da escada está a 3 metros de distância do muro. Em qual altura a escada toca o muro?',
+    id: 18,
+    tema: 'Noções de Geometria',
+    pergunta: 'Um terreno retangular tem 12m de comprimento e 8m de largura. Se quisermos cercá-lo com 3 voltas de arame, quantos metros usaremos?',
+    opcoes: ['40 metros', '96 metros', '120 metros', '240 metros'],
+    respostaCerta: 2
+  },
+  {
+    id: 19,
+    tema: 'Teorema de Pitágoras',
+    pergunta: 'Uma escada de 5 metros está apoiada a 3 metros do muro. Em qual altura a escada toca o muro?',
     opcoes: ['2 metros', '3 metros', '4 metros', '5 metros'],
     respostaCerta: 2
   },
   {
-    id: 10,
+    id: 20,
     tema: 'Raciocínio Lógico',
     pergunta: 'Observe a sequência: 2, 5, 10, 17, 26, ... Qual é o próximo número?',
     opcoes: ['35', '37', '39', '41'],
@@ -198,25 +268,19 @@ export default function NivelamentoPage() {
 
   // Fluxo do Aluno: Finalizado
   if (finished && previousResult) {
-    const percentual = (previousResult.score / previousResult.total) * 100
-    const foiBem = percentual >= 70
-
     return (
       <div className="space-y-6 max-w-2xl mx-auto mt-8">
         <div className="glass-card p-8 text-center animate-fade-in-up">
-          <div className={`w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4 ${foiBem ? 'bg-success/20 text-success' : 'bg-warning/20 text-warning'}`}>
-            {foiBem ? <CheckCircleIcon className="w-8 h-8" /> : <AlertCircleIcon className="w-8 h-8" />}
+          <div className={`w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4 bg-success/20 text-success`}>
+            <CheckCircleIcon className="w-8 h-8" />
           </div>
-          <h2 className="text-2xl font-bold text-text-primary mb-2">Avaliação Concluída!</h2>
+          <h2 className="text-2xl font-bold text-text-primary mb-2">Avaliação Enviada!</h2>
           <p className="text-text-secondary mb-6">
-            Você já realizou a sua prova de nivelamento. O professor avaliará suas maiores dificuldades para montar um plano de estudos focado.
+            Parabéns por concluir sua prova de nivelamento. O professor Davi avaliará suas respostas para montar um plano de estudos totalmente focado em você.
           </p>
           
-          <div className="inline-block p-6 rounded-2xl bg-surface-800/50 border border-surface-700 mb-6">
-            <p className="text-sm text-text-muted mb-1">Seu Resultado</p>
-            <p className={`text-4xl font-black ${foiBem ? 'text-success' : 'text-warning'}`}>
-              {previousResult.score} <span className="text-lg text-text-muted font-normal">/ {previousResult.total}</span>
-            </p>
+          <div className="bg-brand-500/10 border border-brand-500/20 p-4 rounded-xl text-brand-300 text-sm max-w-lg mx-auto">
+            Fique de olho nas suas próximas atividades. Seu roteiro de estudos começará em breve!
           </div>
         </div>
       </div>
