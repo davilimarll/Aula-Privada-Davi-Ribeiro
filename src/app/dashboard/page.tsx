@@ -244,9 +244,9 @@ export default function DashboardPage() {
                 </div>
               </div>
               <div className="rounded-xl overflow-hidden border border-surface-700 bg-surface-900 relative">
-                {/* ScoreBat Iframe */}
+                {/* ScoreBat Iframe World Cup Only */}
                 <iframe 
-                  src="https://www.scorebat.com/embed/livescore/" 
+                  src="https://www.scorebat.com/embed/competition/fifa-world-cup/" 
                   frameBorder="0" 
                   width="100%" 
                   height="600" 
