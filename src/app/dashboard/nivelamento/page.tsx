@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
+import { supabase } from '@/lib/supabase'
 
 function TargetIcon({ className }: { className?: string }) {
   return (
@@ -193,30 +194,53 @@ export default function NivelamentoPage() {
   const [finished, setFinished] = useState(false)
   const [score, setScore] = useState(0)
   const [previousResult, setPreviousResult] = useState<NivelamentoResult | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   // Professor states
   const [alunosResults, setAlunosResults] = useState<NivelamentoResult[]>([])
 
   useEffect(() => {
-    if (!user) return
+    async function fetchResultados() {
+      if (!user) return
 
-    if (user.role === 'aluno') {
-      const saved = localStorage.getItem(`aula-privada-nivelamento-${user.username}`)
-      if (saved) {
-        setPreviousResult(JSON.parse(saved))
-        setFinished(true)
-      }
-    } else {
-      // Professor: buscar resultados
-      const results: NivelamentoResult[] = []
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i)
-        if (key && key.startsWith('aula-privada-nivelamento-')) {
-          results.push(JSON.parse(localStorage.getItem(key) || '{}'))
+      if (user.role === 'aluno') {
+        const { data, error } = await supabase
+          .from('nivelamento_respostas')
+          .select('*')
+          .eq('username', user.username)
+          .single()
+
+        if (data && !error) {
+          setPreviousResult({
+            username: data.username,
+            displayName: data.display_name,
+            score: data.score,
+            total: data.total,
+            date: new Date(data.created_at).toLocaleDateString('pt-BR')
+          })
+          setFinished(true)
+        }
+      } else {
+        // Professor: buscar resultados
+        const { data, error } = await supabase
+          .from('nivelamento_respostas')
+          .select('*')
+          .order('created_at', { ascending: false })
+
+        if (data && !error) {
+          const results = data.map(item => ({
+            username: item.username,
+            displayName: item.display_name,
+            score: item.score,
+            total: item.total,
+            date: new Date(item.created_at).toLocaleDateString('pt-BR')
+          }))
+          setAlunosResults(results)
         }
       }
-      setAlunosResults(results)
     }
+
+    fetchResultados()
   }, [user])
 
   if (!user) return null
@@ -326,28 +350,38 @@ export default function NivelamentoPage() {
     setAnswers(prev => ({ ...prev, [questao.id]: optionIndex }))
   }
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (currentIndex < questoes.length - 1) {
       setCurrentIndex(prev => prev + 1)
     } else {
+      setIsSubmitting(true)
       // Finalizar prova
       let acertos = 0
       questoes.forEach(q => {
         if (answers[q.id] === q.respostaCerta) acertos++
       })
       
-      const result: NivelamentoResult = {
+      const { error } = await supabase.from('nivelamento_respostas').insert({
         username: user.username,
-        displayName: user.displayName,
+        display_name: user.displayName,
         score: acertos,
-        total: questoes.length,
-        date: new Date().toLocaleDateString('pt-BR')
-      }
+        total: questoes.length
+      })
 
-      localStorage.setItem(`aula-privada-nivelamento-${user.username}`, JSON.stringify(result))
-      setScore(acertos)
-      setPreviousResult(result)
-      setFinished(true)
+      if (!error) {
+        setScore(acertos)
+        setPreviousResult({
+          username: user.username,
+          displayName: user.displayName,
+          score: acertos,
+          total: questoes.length,
+          date: new Date().toLocaleDateString('pt-BR')
+        })
+        setFinished(true)
+      } else {
+        alert('Ocorreu um erro ao salvar o resultado. Tente novamente.')
+      }
+      setIsSubmitting(false)
     }
   }
 
@@ -415,10 +449,10 @@ export default function NivelamentoPage() {
         </button>
         <button
           onClick={handleNext}
-          disabled={answers[questao.id] === undefined}
+          disabled={answers[questao.id] === undefined || isSubmitting}
           className="px-6 py-2.5 rounded-xl font-medium bg-brand-600 text-white hover:bg-brand-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {currentIndex === questoes.length - 1 ? 'Finalizar Avaliação' : 'Próxima Questão'}
+          {isSubmitting ? 'Enviando...' : currentIndex === questoes.length - 1 ? 'Finalizar Avaliação' : 'Próxima Questão'}
         </button>
       </div>
     </div>
