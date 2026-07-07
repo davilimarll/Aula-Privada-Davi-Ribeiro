@@ -33,38 +33,68 @@ function CheckIcon({ className }: { className?: string }) {
   )
 }
 
+interface RespostaAluno {
+  id: string
+  username: string
+  resposta: string
+  created_at: string
+  nota?: string
+  feedback?: string
+}
+
 export default function AtividadeRespostaPage() {
   const { user } = useAuth()
   const params = useParams()
   const atividadeId = params.id as string
 
+  // Aluno states
   const [resposta, setResposta] = useState('')
-  const [respostaSalva, setRespostaSalva] = useState<string | null>(null)
+  const [respostaSalva, setRespostaSalva] = useState<RespostaAluno | null>(null)
+  
+  // Professor states
+  const [respostasAlunos, setRespostasAlunos] = useState<RespostaAluno[]>([])
+  const [notasTemp, setNotasTemp] = useState<Record<string, { nota: string, feedback: string }>>({})
+
   const [enviando, setEnviando] = useState(false)
   const [enviado, setEnviado] = useState(false)
   const [carregando, setCarregando] = useState(true)
 
+  const isProfessor = user?.role === 'professor'
+
   const atividade = atividades.find((a) => a.id === atividadeId)
 
-  // Buscar resposta existente do Supabase
+  // Buscar dados no Supabase
   useEffect(() => {
-    async function fetchResposta() {
+    async function fetchDados() {
       if (!user) return
-      const { data } = await supabase
-        .from('respostas')
-        .select('resposta')
-        .eq('atividade_id', atividadeId)
-        .eq('username', user.username)
-        .maybeSingle()
 
-      if (data) {
-        setRespostaSalva(data.resposta)
-        setResposta(data.resposta)
+      if (isProfessor) {
+        // Professor: busca todas as respostas dessa atividade
+        const { data } = await supabase
+          .from('respostas')
+          .select('*')
+          .eq('atividade_id', atividadeId)
+          .order('created_at', { ascending: false })
+        
+        if (data) setRespostasAlunos(data)
+      } else {
+        // Aluno: busca apenas a sua resposta
+        const { data } = await supabase
+          .from('respostas')
+          .select('*')
+          .eq('atividade_id', atividadeId)
+          .eq('username', user.username)
+          .maybeSingle()
+
+        if (data) {
+          setRespostaSalva(data)
+          setResposta(data.resposta)
+        }
       }
       setCarregando(false)
     }
-    fetchResposta()
-  }, [atividadeId, user])
+    fetchDados()
+  }, [atividadeId, user, isProfessor])
 
   if (!user) return null
 
@@ -105,11 +135,11 @@ export default function AtividadeRespostaPage() {
     setEnviando(true)
 
     // Salvar no Supabase
-    const { error } = await supabase.from('respostas').insert({
+    const { data, error } = await supabase.from('respostas').insert({
       atividade_id: atividadeId,
       username: user.username,
       resposta: resposta.trim(),
-    })
+    }).select().single()
 
     if (error) {
       console.error('Erro ao salvar resposta:', error)
@@ -118,10 +148,39 @@ export default function AtividadeRespostaPage() {
       return
     }
 
-    setRespostaSalva(resposta.trim())
+    setRespostaSalva(data)
     setEnviando(false)
     setEnviado(true)
     setTimeout(() => setEnviado(false), 4000)
+  }
+
+  const handleCorrigir = async (respostaId: string) => {
+    const avaliacao = notasTemp[respostaId]
+    if (!avaliacao?.nota) return
+
+    setEnviando(true)
+
+    const { error } = await supabase
+      .from('respostas')
+      .update({
+        nota: avaliacao.nota,
+        feedback: avaliacao.feedback || null,
+      })
+      .eq('id', respostaId)
+
+    if (error) {
+      console.error('Erro ao salvar correção:', error)
+      alert('Erro ao enviar correção.')
+    } else {
+      // Atualizar lista local
+      setRespostasAlunos(prev => 
+        prev.map(r => r.id === respostaId ? { ...r, nota: avaliacao.nota, feedback: avaliacao.feedback } : r)
+      )
+      setEnviado(true)
+      setTimeout(() => setEnviado(false), 4000)
+    }
+    
+    setEnviando(false)
   }
 
   const contadorPalavras = resposta
@@ -139,7 +198,7 @@ export default function AtividadeRespostaPage() {
               <CheckIcon className="w-4 h-4 text-success" />
             </div>
             <div>
-              <p className="text-sm font-medium text-success">Resposta enviada!</p>
+              <p className="text-sm font-medium text-success">{isProfessor ? 'Correção enviada!' : 'Resposta enviada!'}</p>
               <p className="text-xs text-success/70">Salva no banco de dados com sucesso.</p>
             </div>
           </div>
@@ -164,7 +223,7 @@ export default function AtividadeRespostaPage() {
             {atividade.materia}
           </span>
           <span className="text-xs text-text-muted">📅 Entrega: {atividade.dataEntrega}</span>
-          {respostaSalva && (
+          {!isProfessor && respostaSalva && (
             <span className="text-xs px-2.5 py-1 rounded-full bg-success/10 text-success border border-success/20">
               ✅ Respondida
             </span>
@@ -188,79 +247,177 @@ export default function AtividadeRespostaPage() {
         </p>
       </div>
 
-      {/* Answer Form */}
-      <div className="glass-card p-6 lg:p-8 animate-fade-in-up animation-delay-300" style={{ animationFillMode: 'backwards' }}>
-        <div className="flex items-center gap-3 mb-5">
-          <div className="w-10 h-10 rounded-xl bg-brand-500/10 flex items-center justify-center">
-            <SendIcon className="w-5 h-5 text-brand-400" />
-          </div>
-          <div>
-            <h2 className="text-lg font-semibold text-text-primary">Sua Resposta</h2>
-            <p className="text-xs text-text-muted">
-              {respostaSalva
-                ? `${user.displayName}, sua resposta já foi enviada. Você pode revisá-la abaixo.`
-                : `${user.displayName}, escreva sua resposta com atenção e clique em enviar.`
-              }
-            </p>
-          </div>
-        </div>
+      {isProfessor ? (
+        /* ========================================= */
+        /* VISÃO DO PROFESSOR: Lista de respostas    */
+        /* ========================================= */
+        <div className="space-y-4 animate-fade-in-up animation-delay-300" style={{ animationFillMode: 'backwards' }}>
+          <h2 className="text-lg font-semibold text-text-primary mb-4">Respostas dos Alunos</h2>
+          
+          {respostasAlunos.length === 0 ? (
+            <div className="glass-card p-12 text-center text-text-muted">
+              Nenhum aluno respondeu a esta atividade ainda.
+            </div>
+          ) : (
+            respostasAlunos.map((resp) => {
+              const avaliacaoTemp = notasTemp[resp.id] || { nota: resp.nota || '', feedback: resp.feedback || '' }
+              
+              return (
+                <div key={resp.id} className="glass-card p-6 lg:p-8 space-y-4">
+                  <div className="flex items-center justify-between border-b border-surface-500/30 pb-4">
+                    <div>
+                      <h3 className="font-semibold text-text-primary text-lg">{resp.username}</h3>
+                      <p className="text-xs text-text-muted">Enviado em {new Date(resp.created_at).toLocaleString('pt-BR')}</p>
+                    </div>
+                    {resp.nota && (
+                      <span className="inline-flex items-center px-3 py-1 rounded-full bg-success/10 text-success font-bold">
+                        ⭐ Nota: {resp.nota}
+                      </span>
+                    )}
+                  </div>
+                  
+                  <div className="text-text-primary leading-relaxed bg-surface-800 p-4 rounded-xl">
+                    {resp.resposta}
+                  </div>
 
-        <form onSubmit={handleEnviar} className="space-y-4" id="resposta-form">
-          <div>
-            <textarea
-              id="resposta-texto"
-              value={resposta}
-              onChange={(e) => setResposta(e.target.value)}
-              className="input-focus w-full px-4 py-3 rounded-xl text-text-primary placeholder:text-text-muted resize-none"
-              placeholder={`${user.displayName}, escreva sua resposta aqui...`}
-              rows={8}
-              required
-              disabled={!!respostaSalva}
-            />
-            <div className="flex items-center justify-between mt-2">
+                  <div className="bg-surface-900/50 p-4 rounded-xl space-y-3 mt-4 border border-surface-500/30">
+                    <h4 className="text-sm font-medium text-brand-300 flex items-center gap-2">
+                      <CheckIcon className="w-4 h-4" /> Avaliação do Professor
+                    </h4>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                      <div className="col-span-1">
+                        <label className="block text-xs text-text-muted mb-1">Nota</label>
+                        <input 
+                          type="text" 
+                          placeholder="Ex: 10, A, etc"
+                          className="input-focus w-full px-3 py-2 text-sm rounded-lg text-text-primary placeholder:text-text-muted/50"
+                          value={avaliacaoTemp.nota}
+                          onChange={(e) => setNotasTemp({ ...notasTemp, [resp.id]: { ...avaliacaoTemp, nota: e.target.value }})}
+                        />
+                      </div>
+                      <div className="col-span-1 md:col-span-3">
+                        <label className="block text-xs text-text-muted mb-1">Feedback (opcional)</label>
+                        <input 
+                          type="text"
+                          placeholder="Muito bem! Excelente compreensão..." 
+                          className="input-focus w-full px-3 py-2 text-sm rounded-lg text-text-primary placeholder:text-text-muted/50"
+                          value={avaliacaoTemp.feedback}
+                          onChange={(e) => setNotasTemp({ ...notasTemp, [resp.id]: { ...avaliacaoTemp, feedback: e.target.value }})}
+                        />
+                      </div>
+                    </div>
+                    
+                    <button
+                      onClick={() => handleCorrigir(resp.id)}
+                      disabled={enviando || !avaliacaoTemp.nota}
+                      className="btn-glow mt-2 w-full sm:w-auto px-4 py-2 rounded-lg text-xs font-medium disabled:opacity-50"
+                    >
+                      {enviando ? 'Salvando...' : 'Salvar Avaliação'}
+                    </button>
+                  </div>
+                </div>
+              )
+            })
+          )}
+        </div>
+      ) : (
+        /* ========================================= */
+        /* VISÃO DO ALUNO: Responder ou ver nota     */
+        /* ========================================= */
+        <div className="glass-card p-6 lg:p-8 animate-fade-in-up animation-delay-300" style={{ animationFillMode: 'backwards' }}>
+          <div className="flex items-center gap-3 mb-5">
+            <div className="w-10 h-10 rounded-xl bg-brand-500/10 flex items-center justify-center">
+              <SendIcon className="w-5 h-5 text-brand-400" />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-text-primary">Sua Resposta</h2>
               <p className="text-xs text-text-muted">
-                {contadorPalavras > 0 && (
-                  <span className={contadorPalavras < 20 ? 'text-warning' : 'text-success'}>
-                    {contadorPalavras} {contadorPalavras === 1 ? 'palavra' : 'palavras'}
-                  </span>
-                )}
+                {respostaSalva
+                  ? `${user.displayName}, sua resposta já foi enviada. Você pode revisá-la abaixo.`
+                  : `${user.displayName}, escreva sua resposta com atenção e clique em enviar.`
+                }
               </p>
-              {respostaSalva && (
-                <p className="text-xs text-success">✅ Resposta salva no banco de dados</p>
-              )}
             </div>
           </div>
 
-          {!respostaSalva && (
-            <button
-              type="submit"
-              disabled={enviando || !resposta.trim()}
-              className="btn-glow px-6 py-3 rounded-xl text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-              id="enviar-resposta-button"
-            >
-              <span className="flex items-center gap-2">
-                {enviando ? (
-                  <>
-                    <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                    </svg>
-                    Enviando resposta...
-                  </>
-                ) : (
-                  <>
-                    <SendIcon className="w-4 h-4" />
-                    Enviar Resposta
-                  </>
+          <form onSubmit={handleEnviar} className="space-y-4" id="resposta-form">
+            <div>
+              <textarea
+                id="resposta-texto"
+                value={resposta}
+                onChange={(e) => setResposta(e.target.value)}
+                className="input-focus w-full px-4 py-3 rounded-xl text-text-primary placeholder:text-text-muted resize-none"
+                placeholder={`${user.displayName}, escreva sua resposta aqui...`}
+                rows={8}
+                required
+                disabled={!!respostaSalva}
+              />
+              <div className="flex items-center justify-between mt-2">
+                <p className="text-xs text-text-muted">
+                  {contadorPalavras > 0 && (
+                    <span className={contadorPalavras < 20 ? 'text-warning' : 'text-success'}>
+                      {contadorPalavras} {contadorPalavras === 1 ? 'palavra' : 'palavras'}
+                    </span>
+                  )}
+                </p>
+                {respostaSalva && !respostaSalva.nota && (
+                  <p className="text-xs text-success">✅ Resposta enviada ao professor</p>
                 )}
-              </span>
-            </button>
-          )}
-        </form>
-      </div>
+              </div>
+            </div>
+
+            {respostaSalva?.nota && (
+              <div className="mt-6 bg-success/5 border border-success/20 rounded-xl p-5">
+                <h3 className="font-semibold text-success flex items-center gap-2 mb-2">
+                  <CheckIcon className="w-5 h-5" />
+                  Atividade Corrigida!
+                </h3>
+                <div className="flex flex-col gap-2">
+                  <div className="inline-flex max-w-fit items-center px-3 py-1 rounded-full bg-success/20 text-success font-bold">
+                    ⭐ Nota: {respostaSalva.nota}
+                  </div>
+                  {respostaSalva.feedback && (
+                    <p className="text-sm text-text-secondary mt-2 border-l-2 border-success/30 pl-3">
+                      <strong className="text-text-primary">Feedback do Professor:</strong><br/>
+                      {respostaSalva.feedback}
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {!respostaSalva && (
+              <button
+                type="submit"
+                disabled={enviando || !resposta.trim()}
+                className="btn-glow px-6 py-3 rounded-xl text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                id="enviar-resposta-button"
+              >
+                <span className="flex items-center gap-2">
+                  {enviando ? (
+                    <>
+                      <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                      </svg>
+                      Enviando resposta...
+                    </>
+                  ) : (
+                    <>
+                      <SendIcon className="w-4 h-4" />
+                      Enviar Resposta
+                    </>
+                  )}
+                </span>
+              </button>
+            )}
+          </form>
+        </div>
+      )}
 
       {/* Tip */}
-      {!respostaSalva && (
+      {!isProfessor && !respostaSalva && (
         <div
           className="glass-card p-4 border-l-4 border-l-brand-500 opacity-0 animate-fade-in-up"
           style={{ animationDelay: '0.5s', animationFillMode: 'forwards' }}

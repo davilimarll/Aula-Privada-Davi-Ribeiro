@@ -179,7 +179,9 @@ export default function DashboardLayout({
               <p className="text-sm font-medium text-text-primary truncate">
                 {user.displayName}
               </p>
-              <p className="text-xs text-text-muted">Aluno</p>
+              <p className="text-xs text-text-muted">
+                {user.role === 'professor' ? 'Professor' : 'Aluno'}
+              </p>
             </div>
           </div>
           <button

@@ -24,6 +24,19 @@ function ClockIcon({ className }: { className?: string }) {
   )
 }
 
+function ClipboardIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+      <path d="M12 11h4" />
+      <path d="M12 16h4" />
+      <path d="M8 11h.01" />
+      <path d="M8 16h.01" />
+    </svg>
+  )
+}
+
 function CheckCircleIcon({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -90,26 +103,40 @@ export default function AtividadesPage() {
   const pendentes = atividades.filter((a) => !respostasIds.has(a.id)).length
   const entregues = atividades.filter((a) => respostasIds.has(a.id)).length
 
+  const isProfessor = user.role === 'professor'
+
   return (
     <div className="space-y-6 max-w-4xl">
       {/* Page Header */}
       <div className="animate-fade-in-up">
         <h1 className="text-2xl font-bold text-text-primary">Atividades</h1>
         <p className="mt-1 text-text-secondary">
-          {user.displayName}, aqui estão suas atividades. Clique em &quot;Fazer Atividade&quot; para responder! 📋
+          {isProfessor 
+            ? `${user.displayName}, aqui estão as atividades da sua turma. Acompanhe as respostas dos alunos! 👨‍🏫`
+            : `${user.displayName}, aqui estão suas atividades. Clique em "Fazer Atividade" para responder! 📋`
+          }
         </p>
       </div>
 
       {/* Stats Bar */}
       <div className="flex gap-3 animate-fade-in-up animation-delay-100" style={{ animationFillMode: 'backwards' }}>
-        <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-warning/10 border border-warning/20">
-          <ClockIcon className="w-4 h-4 text-warning" />
-          <span className="text-sm font-medium text-warning">{pendentes} pendente{pendentes !== 1 ? 's' : ''}</span>
-        </div>
-        <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-success/10 border border-success/20">
-          <CheckCircleIcon className="w-4 h-4 text-success" />
-          <span className="text-sm font-medium text-success">{entregues} entregue{entregues !== 1 ? 's' : ''}</span>
-        </div>
+        {isProfessor ? (
+          <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-500/10 border border-brand-500/20">
+            <ClipboardIcon className="w-4 h-4 text-brand-400" />
+            <span className="text-sm font-medium text-brand-400">{atividades.length} atividade{atividades.length !== 1 ? 's' : ''} criadas</span>
+          </div>
+        ) : (
+          <>
+            <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-warning/10 border border-warning/20">
+              <ClockIcon className="w-4 h-4 text-warning" />
+              <span className="text-sm font-medium text-warning">{pendentes} pendente{pendentes !== 1 ? 's' : ''}</span>
+            </div>
+            <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-success/10 border border-success/20">
+              <CheckCircleIcon className="w-4 h-4 text-success" />
+              <span className="text-sm font-medium text-success">{entregues} entregue{entregues !== 1 ? 's' : ''}</span>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Activities List */}
@@ -165,15 +192,17 @@ export default function AtividadesPage() {
                     </p>
                     <div className="flex flex-wrap items-center gap-4 text-xs text-text-muted">
                       <span>📅 Entrega: {atividade.dataEntrega}</span>
-                      <span
-                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full ${
-                          respondida
-                            ? 'bg-success/10 text-success'
-                            : 'bg-warning/10 text-warning'
-                        }`}
-                      >
-                        {respondida ? '✅ Entregue' : '⏳ Pendente'}
-                      </span>
+                      {!isProfessor && (
+                        <span
+                          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full ${
+                            respondida
+                              ? 'bg-success/10 text-success'
+                              : 'bg-warning/10 text-warning'
+                          }`}
+                        >
+                          {respondida ? '✅ Entregue' : '⏳ Pendente'}
+                        </span>
+                      )}
                     </div>
                   </div>
 
@@ -181,13 +210,18 @@ export default function AtividadesPage() {
                   <Link
                     href={`/dashboard/atividades/${atividade.id}`}
                     className={`shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
-                      respondida
-                        ? 'bg-success/10 text-success hover:bg-success/20'
-                        : 'bg-brand-500/15 text-brand-400 hover:bg-brand-500/25'
+                      isProfessor || !respondida
+                        ? 'bg-brand-500/15 text-brand-400 hover:bg-brand-500/25'
+                        : 'bg-success/10 text-success hover:bg-success/20'
                     }`}
                     id={`atividade-${atividade.id}`}
                   >
-                    {respondida ? (
+                    {isProfessor ? (
+                      <>
+                        Ver Respostas dos Alunos
+                        <ArrowRightIcon className="w-4 h-4" />
+                      </>
+                    ) : respondida ? (
                       <>
                         <CheckCircleIcon className="w-4 h-4" />
                         Ver Resposta
@@ -212,7 +246,11 @@ export default function AtividadesPage() {
         style={{ animationDelay: '0.6s', animationFillMode: 'forwards' }}
       >
         <p className="text-sm text-text-secondary">
-          📌 <strong className="text-brand-300">{user.displayName}</strong>, clique em &quot;Fazer Atividade&quot; para abrir a questão e enviar sua resposta. Depois de enviar, você pode revisá-la clicando em &quot;Ver Resposta&quot;.
+          {isProfessor ? (
+            <>📌 <strong className="text-brand-300">Prof. {user.displayName}</strong>, clique em &quot;Ver Respostas dos Alunos&quot; para corrigir as atividades enviadas.</>
+          ) : (
+            <>📌 <strong className="text-brand-300">{user.displayName}</strong>, clique em &quot;Fazer Atividade&quot; para abrir a questão e enviar sua resposta. Depois de enviar, você pode revisá-la clicando em &quot;Ver Resposta&quot;.</>
+          )}
         </p>
       </div>
     </div>
