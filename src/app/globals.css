@@ -40,6 +40,24 @@
 }
 
 /* ===========================
+   Tema Claro (Overrides)
+   =========================== */
+:root[data-theme="light"] {
+  /* Superfícies (Branco e tons bem claros de azul/cinza) */
+  --color-surface-900: #f8fafc;
+  --color-surface-800: #ffffff;
+  --color-surface-700: #f1f5f9;
+  --color-surface-600: #e2e8f0;
+  --color-surface-500: #cbd5e1;
+  --color-surface-400: #94a3b8;
+
+  /* Texto escuro para contraste */
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #334155;
+  --color-text-muted: #64748b;
+}
+
+/* ===========================
    Base Styles
    =========================== */
 

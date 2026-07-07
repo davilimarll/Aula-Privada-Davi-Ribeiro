@@ -1,6 +1,7 @@
 'use client'
 
 import { useAuth } from '@/contexts/AuthContext'
+import { useTheme } from '@/contexts/ThemeContext'
 import { useRouter, usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
@@ -83,6 +84,26 @@ function WavingHandIcon({ className }: { className?: string }) {
   )
 }
 
+function SunIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="4"/>
+      <path d="M12 2v2"/><path d="M12 20v2"/>
+      <path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/>
+      <path d="M2 12h2"/><path d="M20 12h2"/>
+      <path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
+    </svg>
+  )
+}
+
+function MoonIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+    </svg>
+  )
+}
+
 const navItems = [
   { href: '/dashboard', label: 'Início', icon: HomeIcon },
   { href: '/dashboard/atividades', label: 'Atividades', icon: ClipboardIcon },
@@ -95,6 +116,7 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   const { user, logout, isLoading } = useAuth()
+  const { theme, toggleTheme } = useTheme()
   const router = useRouter()
   const pathname = usePathname()
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -195,6 +217,15 @@ export default function DashboardLayout({
               </p>
             </div>
           </div>
+
+          <button
+            onClick={toggleTheme}
+            className="flex items-center gap-3 w-full px-4 py-2.5 rounded-xl text-sm text-text-secondary hover:text-text-primary hover:bg-surface-600/50 transition-all duration-200 mb-1"
+          >
+            {theme === 'light' ? <MoonIcon className="w-5 h-5" /> : <SunIcon className="w-5 h-5" />}
+            {theme === 'light' ? 'Modo Escuro' : 'Modo Claro'}
+          </button>
+
           <button
             onClick={logout}
             className="flex items-center gap-3 w-full px-4 py-2.5 rounded-xl text-sm text-danger/80 hover:text-danger hover:bg-danger/10 transition-all duration-200"
