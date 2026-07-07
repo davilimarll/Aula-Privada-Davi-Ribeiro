@@ -31,6 +31,12 @@ const DEMO_USERS = [
     role: 'aluno' as const,
   },
   {
+    username: 'Breno',
+    password: '0105',
+    displayName: 'Breno',
+    role: 'aluno' as const,
+  },
+  {
     username: 'Davi',
     password: '1010',
     displayName: 'Prof. Davi Ribeiro',
