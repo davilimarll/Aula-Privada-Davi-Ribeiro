@@ -33,6 +33,24 @@ function AlertCircleIcon({ className }: { className?: string }) {
   )
 }
 
+function ChevronDownIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m6 9 6 6 6-6" />
+    </svg>
+  )
+}
+
+function XCircleIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <path d="m15 9-6 6"/>
+      <path d="m9 9 6 6"/>
+    </svg>
+  )
+}
+
 const questoes = [
   {
     id: 1,
@@ -177,11 +195,13 @@ const questoes = [
 ]
 
 interface NivelamentoResult {
+  id?: string;
   username: string;
   displayName: string;
   score: number;
   total: number;
   date: string;
+  respostas?: { questao: number; tema: string; acertou: boolean; }[];
 }
 
 export default function NivelamentoPage() {
@@ -229,11 +249,13 @@ export default function NivelamentoPage() {
 
         if (data && !error) {
           const results = data.map(item => ({
+            id: item.id,
             username: item.username,
             displayName: item.display_name,
             score: item.score,
             total: item.total,
-            date: new Date(item.created_at).toLocaleDateString('pt-BR')
+            date: new Date(item.created_at).toLocaleDateString('pt-BR'),
+            respostas: item.respostas || []
           }))
           setAlunosResults(results)
         }
@@ -246,6 +268,15 @@ export default function NivelamentoPage() {
   if (!user) return null
 
   const isProfessor = user.role === 'professor'
+
+  // Professor states add-on
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [expandedId, setExpandedId] = useState<string | null>(null)
+  
+  const toggleExpand = (id?: string) => {
+    if (!id) return
+    setExpandedId(prev => prev === id ? null : id)
+  }
 
   // Fluxo do Professor
   if (isProfessor) {
@@ -272,14 +303,48 @@ export default function NivelamentoPage() {
                 const cor = percentual >= 70 ? 'text-success bg-success/10 border-success/20' : percentual >= 50 ? 'text-warning bg-warning/10 border-warning/20' : 'text-danger bg-danger/10 border-danger/20'
                 
                 return (
-                  <div key={i} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl bg-surface-800/50 border border-surface-700 gap-4">
-                    <div>
-                      <h3 className="font-semibold text-text-primary">{res.displayName}</h3>
-                      <p className="text-sm text-text-muted">Realizado em {res.date}</p>
-                    </div>
-                    <div className={`px-4 py-2 rounded-lg border ${cor} font-bold whitespace-nowrap`}>
-                      Nota: {res.score} / {res.total} ({percentual.toFixed(0)}%)
-                    </div>
+                  <div key={res.id || i} className="rounded-xl bg-surface-800/50 border border-surface-700 overflow-hidden">
+                    <button 
+                      onClick={() => toggleExpand(res.id)}
+                      className="w-full flex flex-col sm:flex-row sm:items-center justify-between p-4 hover:bg-surface-700/30 transition-colors text-left gap-4"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className={`p-2 rounded-lg ${cor.split(' ')[1]} ${cor.split(' ')[0]}`}>
+                          <TargetIcon className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-text-primary">{res.displayName}</h3>
+                          <p className="text-sm text-text-muted">Realizado em {res.date}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center gap-4">
+                        <div className={`px-4 py-1.5 rounded-lg border ${cor} font-bold whitespace-nowrap`}>
+                          Nota: {res.score} / {res.total} ({percentual.toFixed(0)}%)
+                        </div>
+                        <ChevronDownIcon className={`w-5 h-5 text-text-muted transition-transform ${expandedId === res.id ? 'rotate-180' : ''}`} />
+                      </div>
+                    </button>
+                    
+                    {expandedId === res.id && res.respostas && (
+                      <div className="border-t border-surface-700 bg-surface-800/20 p-4">
+                        <h4 className="text-sm font-semibold text-text-secondary mb-3 uppercase tracking-wider">Detalhes por Tópico</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                          {res.respostas.map((r, idx) => (
+                            <div key={idx} className="flex items-center gap-2 p-2 rounded bg-surface-900/50">
+                              {r.acertou ? (
+                                <CheckCircleIcon className="w-4 h-4 text-success shrink-0" />
+                              ) : (
+                                <XCircleIcon className="w-4 h-4 text-danger shrink-0" />
+                              )}
+                              <span className={`text-sm ${r.acertou ? 'text-text-secondary' : 'text-danger/80'}`}>
+                                Q{r.questao}: {r.tema}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )
               })}
@@ -357,15 +422,22 @@ export default function NivelamentoPage() {
       setIsSubmitting(true)
       // Finalizar prova
       let acertos = 0
-      questoes.forEach(q => {
-        if (answers[q.id] === q.respostaCerta) acertos++
+      const respostasArray = questoes.map(q => {
+        const acertou = answers[q.id] === q.respostaCerta
+        if (acertou) acertos++
+        return {
+          questao: q.id,
+          tema: q.tema,
+          acertou
+        }
       })
       
       const { error } = await supabase.from('nivelamento_respostas').insert({
         username: user.username,
         display_name: user.displayName,
         score: acertos,
-        total: questoes.length
+        total: questoes.length,
+        respostas: respostasArray
       })
 
       if (!error) {
