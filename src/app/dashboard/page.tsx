@@ -244,16 +244,14 @@ export default function DashboardPage() {
                 </div>
               </div>
               <div className="rounded-xl overflow-hidden border border-surface-700 bg-surface-900 relative">
-                {/* ScoreBat Iframe World Cup Only */}
+                {/* FCTables Iframe World Cup Real Data */}
                 <iframe 
-                  src="https://www.scorebat.com/embed/competition/fifa-world-cup/" 
+                  src="https://www.fctables.com/fifa-world-cup/iframe/?type=table&lang_id=22&country=67&template=10&team=&timezone=America/Sao_Paulo&time=24&po=1&te=1&hp=1" 
                   frameBorder="0" 
                   width="100%" 
                   height="600" 
                   allowFullScreen 
-                  allow="autoplay; fullscreen" 
                   style={{width: '100%', height: '600px', overflow: 'hidden', display: 'block'}} 
-                  className="_scorebatEmbeddedPlayer_"
                 ></iframe>
               </div>
             </div>
