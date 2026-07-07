@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 interface User {
   username: string
   displayName: string
+  role: 'professor' | 'aluno'
 }
 
 interface AuthContextType {
@@ -22,11 +23,20 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
  * Quando o Supabase Auth for ativado, substitua a lógica
  * de login/logout por chamadas ao supabase.auth
  */
-const DEMO_CREDENTIALS = {
-  username: 'Kirk',
-  password: '2525',
-  displayName: 'Kirk',
-}
+const DEMO_USERS = [
+  {
+    username: 'Kirk',
+    password: '2525',
+    displayName: 'Kirk',
+    role: 'aluno' as const,
+  },
+  {
+    username: 'Davi',
+    password: '1010',
+    displayName: 'Prof. Davi Ribeiro',
+    role: 'professor' as const,
+  },
+]
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
@@ -47,13 +57,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (username: string, password: string): Promise<boolean> => {
     // Validação hardcoded para demo
-    if (
-      username.toLowerCase() === DEMO_CREDENTIALS.username.toLowerCase() &&
-      password === DEMO_CREDENTIALS.password
-    ) {
+    const validUser = DEMO_USERS.find(
+      (u) => u.username.toLowerCase() === username.toLowerCase() && u.password === password
+    )
+
+    if (validUser) {
       const loggedUser: User = {
-        username: DEMO_CREDENTIALS.username,
-        displayName: DEMO_CREDENTIALS.displayName,
+        username: validUser.username,
+        displayName: validUser.displayName,
+        role: validUser.role,
       }
       setUser(loggedUser)
       localStorage.setItem('aula-privada-user', JSON.stringify(loggedUser))
