@@ -117,16 +117,7 @@ function ArrowRightIcon({ className }: { className?: string }) {
  * Quando migrar para Supabase completo, substitua este array
  * por uma query à tabela `atividades`.
  */
-export const atividades: Atividade[] = [
-  {
-    id: 'ativ-001',
-    titulo: 'Interpretação de Texto — Crônica de Machado de Assis',
-    descricao: 'Leia o trecho da crônica de Machado de Assis e responda à questão interpretativa.',
-    dataEntrega: '14/07/2026',
-    materia: 'Língua Portuguesa',
-    questao: 'No trecho "O tempo é um tecido invisível em que se pode bordar tudo, uma flor, um pássaro, uma dama, um castelo, um túmulo", Machado de Assis utiliza uma figura de linguagem para representar o tempo. Identifique essa figura de linguagem e explique, com suas palavras, o que o autor quis dizer com essa construção.',
-  },
-]
+export const atividades: Atividade[] = []
 
 export default function AtividadesPage() {
   const { user } = useAuth()
