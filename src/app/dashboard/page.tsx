@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
+import { atividades } from '@/app/dashboard/atividades/page'
 
 function ClipboardIcon({ className }: { className?: string }) {
   return (
@@ -94,7 +95,7 @@ export default function DashboardPage() {
   const [redacoesCount, setRedacoesCount] = useState(0)
   const isProfessor = user?.role === 'professor'
 
-  const totalAtividades = 1 // Atualizar conforme adicionar atividades
+  const totalAtividades = atividades.length // Agora ligado à lista real
   const pendentesCount = Math.max(0, totalAtividades - entreguesCount)
 
   useEffect(() => {
