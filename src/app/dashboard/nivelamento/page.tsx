@@ -191,6 +191,76 @@ const questoes = [
     pergunta: 'Observe a sequência: 2, 5, 10, 17, 26, ... Qual é o próximo número?',
     opcoes: ['35', '37', '39', '41'],
     respostaCerta: 1
+  },
+  {
+    id: 21,
+    tema: 'Números Inteiros',
+    pergunta: 'Qual é o resultado da expressão: (-8) × (-5) + (-20) ÷ 4?',
+    opcoes: ['35', '45', '-45', '-35'],
+    respostaCerta: 0
+  },
+  {
+    id: 22,
+    tema: 'Números Racionais',
+    pergunta: 'Ao converter a fração 3/5 para número decimal e somar com 0,4, obtemos:',
+    opcoes: ['0,7', '1,0', '0,9', '1,1'],
+    respostaCerta: 1
+  },
+  {
+    id: 23,
+    tema: 'Porcentagem',
+    pergunta: 'Se 15% de um valor é 45, qual é esse valor total?',
+    opcoes: ['150', '200', '300', '450'],
+    respostaCerta: 2
+  },
+  {
+    id: 24,
+    tema: 'Regra de Três Simples',
+    pergunta: 'Um carro viajando a 80 km/h leva 3 horas para completar um trajeto. Se a velocidade fosse de 120 km/h, quanto tempo levaria?',
+    opcoes: ['1,5 horas', '2 horas', '2,5 horas', '4,5 horas'],
+    respostaCerta: 1
+  },
+  {
+    id: 25,
+    tema: 'Relação entre Grandezas',
+    pergunta: 'Em um gráfico de velocidade constante, se em 2 horas foram percorridos 100 km, qual a distância percorrida em 5 horas?',
+    opcoes: ['200 km', '220 km', '250 km', '300 km'],
+    respostaCerta: 2
+  },
+  {
+    id: 26,
+    tema: 'Noções de Geometria',
+    pergunta: 'Qual é a área de um triângulo retângulo cuja base mede 6 cm e a altura mede 8 cm?',
+    opcoes: ['24 cm²', '48 cm²', '14 cm²', '10 cm²'],
+    respostaCerta: 0
+  },
+  {
+    id: 27,
+    tema: 'Equação do 1º Grau',
+    pergunta: 'Se 2x + 7 = 3x - 5, qual o valor de x?',
+    opcoes: ['2', '-2', '12', '-12'],
+    respostaCerta: 2
+  },
+  {
+    id: 28,
+    tema: 'Sistema de Equações',
+    pergunta: 'Comprei 3 cadernos e 2 canetas por R$ 35,00. Sabendo que o caderno custa R$ 5,00 a mais que a caneta. Qual o preço da caneta?',
+    opcoes: ['R$ 3,00', 'R$ 4,00', 'R$ 5,00', 'R$ 6,00'],
+    respostaCerta: 1
+  },
+  {
+    id: 29,
+    tema: 'Sistema Métrico',
+    pergunta: 'Uma corrida tem o percurso de 5,5 km. Se um atleta já correu 2.300 metros, quantos metros faltam?',
+    opcoes: ['2.200 m', '3.200 m', '3.500 m', '2.700 m'],
+    respostaCerta: 1
+  },
+  {
+    id: 30,
+    tema: 'Raciocínio Lógico',
+    pergunta: 'Se a palavra AMIGO é codificada mudando cada letra para a próxima do alfabeto (BNJHP), como seria a palavra PROVA?',
+    opcoes: ['QSPWB', 'QSPXB', 'OQNUB', 'QQSWB'],
+    respostaCerta: 0
   }
 ]
 
