@@ -93,6 +93,7 @@ export default function DashboardPage() {
 
   const [entreguesCount, setEntreguesCount] = useState(0)
   const [redacoesCount, setRedacoesCount] = useState(0)
+  const [isThemeOpen, setIsThemeOpen] = useState(false)
   const isProfessor = user?.role === 'professor'
 
   const totalAtividades = atividades.length // Agora ligado à lista real
@@ -228,10 +229,48 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      {/* Tema Escolhido Card */}
+      <div 
+        className="glass-card overflow-hidden opacity-0 animate-fade-in-up cursor-pointer transition-all duration-300 hover:border-brand-500/30"
+        style={{ animationDelay: '0.6s', animationFillMode: 'forwards' }}
+        onClick={() => setIsThemeOpen(!isThemeOpen)}
+      >
+        <div className="p-6 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500/20 to-purple-700/10 flex items-center justify-center text-purple-400">
+              <PenIcon className="w-6 h-6" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-text-primary">Tarefa das Introduções</h3>
+              <p className="text-sm text-text-secondary">Clique para ver o tema escolhido</p>
+            </div>
+          </div>
+          <svg
+            className={`w-5 h-5 text-text-secondary transition-transform duration-300 ${isThemeOpen ? 'rotate-180' : ''}`}
+            fill="none" viewBox="0 0 24 24" stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+        
+        <div
+          className={`px-6 transition-all duration-300 ease-in-out ${
+            isThemeOpen ? 'max-h-96 pb-6 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
+          }`}
+        >
+          <div className="pt-4 border-t border-white/5">
+            <h4 className="text-md font-semibold text-brand-400 mb-2">A Importância da Lei Maria da Penha</h4>
+            <p className="text-sm text-text-secondary leading-relaxed">
+              A Lei Maria da Penha é uma ferramenta fundamental na luta contra a violência doméstica. A redação pode discutir sua importância na proteção das mulheres, destacando os desafios enfrentados para sua implementação eficaz.
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Tip Card */}
       <div
         className="glass-card p-4 border-l-4 border-l-gold-500 opacity-0 animate-fade-in-up flex items-start gap-3"
-        style={{ animationDelay: '0.6s', animationFillMode: 'forwards' }}
+        style={{ animationDelay: '0.7s', animationFillMode: 'forwards' }}
       >
         <LightbulbIcon className="w-5 h-5 text-gold-500 mt-0.5 shrink-0" />
         <p className="text-sm text-text-secondary">
